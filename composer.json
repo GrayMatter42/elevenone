@@ -1,0 +1,9 @@
+{
+  "require" : {
+    "php": "^7.2",
+    "elevenone/darkmatter": "dev-main"
+  },
+  "require-dev": {
+    "heroku/heroku-buildpack-php": "*"
+  }
+}
