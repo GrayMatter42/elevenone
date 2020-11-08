@@ -8,6 +8,9 @@
     <link rel="icon" href="/ui/favicon.png" />
 </head>
 <body>
+
+<?php include __DIR__ . '/anim.php'; ?>
+
 <div id="header">
 <pre>
 <code>
