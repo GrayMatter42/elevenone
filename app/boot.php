@@ -4,9 +4,24 @@
  */
 declare(strict_types = 1);
 
+
+$number = [
+    1234235345345345,
+    3545435454354543,
+    5674765786886788,
+    0000000000000042,
+    7896768545353535
+];
+
+$rand_keys = array_rand($number, 2);
+$serial = $number[$rand_keys[0]];
+
+
 $payload = [
     'status' => '42',
-    'message' => 'hello world'
+    'message' => 'hello world',
+    'serial' => $serial,
+    'pool' => $number
 ];
 
 header('Content-Type: text/html; charset=utf-8');
