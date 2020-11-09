@@ -1,156 +1,152 @@
-<style>
-.circle {
-  left: 0;
-  border-radius: 50%;
-  overflow: hidden;
-  position: absolute;
-  z-index: 0;
-  animation-direction: alternate;
-}
-.circle:after {
-  content: '';
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,0.2+100 */
-  background: -moz-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.2) 100%);
-  /* FF3.6-15 */
-  background: -webkit-radial-gradient(center, ellipse cover, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.2) 100%);
-  /* Chrome10-25,Safari5.1-6 */
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.2) 100%);
-  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#33ffffff', GradientType=1);
-  /* IE6-9 fallback on horizontal gradient */
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-.circle.sunset {
-  width: 13.98112427vh;
-  height: 13.98112427vh;
-  top: -13.98112427vh;
-  background: #00d2ff;
-  background: #FF5F6D;
-  background: -webkit-linear-gradient(-45deg, #FFC371, #FF5F6D);
-  background: linear-gradient(-45deg, #FFC371, #FF5F6D);
-  animation: orb1 30s cubic-bezier(0.27, 0.96, 0.58, 1) alternate infinite;
-  opacity: 0.55375406;
-}
-.circle.coolice {
-  background: #4CA1AF;
-  /* fallback for old browsers */
-  background: -webkit-linear-gradient(-45deg, #C4E0E5, #4CA1AF);
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(-45deg, #C4E0E5, #4CA1AF);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  width: 16.32155291vh;
-  height: 16.32155291vh;
-  top: -16.32155291vh;
-  animation: orb2 26s cubic-bezier(0.27, 0.96, 0.58, 1) alternate infinite;
-  opacity: 0.7429849;
-}
-.circle.timber {
-  background: #fc00ff;
-  background: -webkit-linear-gradient(45deg, #00dbde, #fc00ff);
-  background: linear-gradient(45deg, #00dbde, #fc00ff);
-  width: 20.27217866vh;
-  height: 20.27217866vh;
-  top: -20.27217866vh;
-  animation: orb3 43s cubic-bezier(0.27, 0.96, 0.58, 1) alternate infinite;
-  opacity: 0.53439838;
-}
-.circle.pig {
-  background: #ee9ca7;
-  background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7);
-  background: linear-gradient(to right, #ffdde1, #ee9ca7);
-  width: 22.49410273vh;
-  height: 22.49410273vh;
-  top: -22.49410273vh;
-  animation: orb4 32s cubic-bezier(0.27, 0.96, 0.58, 1) alternate infinite;
-  opacity: 0.61731043;
-}
-.circle.friday {
-  background: #83a4d4;
-  background: -webkit-linear-gradient(84deg, #b6fbff, #83a4d4);
-  background: linear-gradient(84deg, #b6fbff, #83a4d4);
-  width: 6.86775075vh;
-  height: 6.86775075vh;
-  top: -6.86775075vh;
-  animation: orb5 40s cubic-bezier(0.27, 0.96, 0.58, 1) alternate infinite;
-  opacity: 0.79234775;
+<script src='https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js'></script>
+
+
+<canvas id="canvas"></canvas>
+<script>
+/*--------------------
+Vars
+--------------------*/
+// const width = Math.min(window.innerWidth, window.innerHeight) * .8;
+// const height = width;
+const width = 300;
+const height = 300;
+const cell = 10;
+const simplex = new SimplexNoise();
+const loop = 0;
+
+
+/*--------------------
+                Raf
+                --------------------*/
+class Raf {
+  constructor() {
+    this.raf();
+  }
+
+  raf() {
+    if (this.onRaf) {
+      window.requestAnimationFrame(() => {
+        const o = {};
+        o.time = window.performance.now() / 1000;
+        o.playhead = o.time % loop / loop;
+        this.raf();
+        this.onRaf(o);
+      });
+    }
+  }}
+
+
+
+/*--------------------
+     Canvas
+     --------------------*/
+class Canvas extends Raf {
+  constructor(obj) {
+    super();
+    this.canvas = document.getElementById(obj.id);
+    this.ctx = this.canvas.getContext('2d');
+    // this.resize();
+    this.events();
+  }
+
+  resize() {
+    this.dpr = window.devicePixelRatio;
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+    this.canvas.width = width * this.dpr;
+    this.canvas.height = height * this.dpr;
+    this.ctx = this.canvas.getContext('2d');
+    this.ctx.scale(this.dpr, this.dpr);
+  }
+
+  events() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  clear() {
+    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+
+  onRaf() {
+    this.clear();
+  }}
+
+
+
+/*--------------------
+     Fur
+     --------------------*/
+class Fur extends Raf {
+  constructor(obj) {
+    super();
+    Object.assign(this, obj);
+    this.draw();
+  }
+
+  draw(playhead, time) {
+    this.ctx.save();
+    this.ctx.translate(this.x, this.y);
+    const n = this.simplex.noise3D(time * 0.1 + this.x * 0.002, -time * 0.2 + this.y * 0.002, time * 0.3);
+
+    this.ctx.fillStyle = 'white';
+
+    const t = Math.round(22 * ((n + 2) * .5)) % 10;
+
+    for (let i = 0; i < t; i++) {
+      this.ctx.fillRect(Math.random() * cell, Math.random() * 30, 1, 1);
+    }
+    this.ctx.fill();
+    this.ctx.restore();
+  }
+
+  onRaf({ playhead, time }) {
+    this.draw(playhead, time);
+  }}
+
+
+
+/*--------------------
+     Init
+     --------------------*/
+const canvas = new Canvas({
+  id: 'canvas' });
+
+
+for (let y = 0; y < height; y += cell) {
+  for (let x = 0; x < width; x += cell) {
+    const i = y * width / cell + x / cell;
+    new Fur({
+      ctx: canvas.ctx,
+      x: x,
+      y: y,
+      id: i,
+      simplex: simplex });
+
+  }
 }
 
-h1 {
-  line-height: 100vh;
-  text-align: center;
-  font-size: 40vh;
-  margin: 0;
-  font-family: arial;
-  z-index: 10;
-  position: relative;
-  /* color: #7a5598; */
-  color: #3B2F63;
-  
-}
-@keyframes orb1 {
-  0% {
-    transform: translatey(150vh) translatex(0vw);
-  }
-  100% {
-    transform: translatey(-128.53526875vh) translatex(111.75639711vw);
-  }
-}
-@keyframes orb2 {
-  0% {
-    transform: translatey(0vh) translatex(60vw);
-  }
-  100% {
-    transform: translatey(133.17083162vh) translatex(40.27155328vw);
-  }
-}
-@keyframes orb3 {
-  0% {
-    transform: translatey(70vh) translatex(70vw);
-  }
-  100% {
-    transform: translatey(68.29616937vh) translatex(50vw);
-  }
-}
-@keyframes orb4 {
-  0% {
-    transform: translatey(50vh) translatex(10vw);
-  }
-  100% {
-    transform: translatey(33.4616137vh) translatex(34.35436547vw);
-  }
-}
-@keyframes orb5 {
-  0% {
-    transform: translatey(80vh) translatex(80vw);
-  }
-  100% {
-    transform: translatey(76.22426501vh) translatex(46.40465597vw);
-  }
-}
-.headercontent {
-  height: 100vh;
+</script>
+<style>
+
+
+body {
   overflow: hidden;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+}
+
+
+canvas {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100vw;
-  z-index: 1;
+  z-index:12;
 }
 
 
 </style>
-
-
-<div class="headercontent">
-    <div class="circle sunset"></div>
-    <div class="circle coolice"></div>
-    <div class="circle timber"></div>
-    <div class="circle pig"></div>
-    <div class="circle friday"></div>
-    <h1>42</h1>
-</div>
