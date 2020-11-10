@@ -5,6 +5,26 @@
 declare(strict_types = 1);
 
 
+
+
+// use View;
+    
+
+
+$view = new View();
+$view->header = "This is my fancy header section";
+$view->body = "This is my fancy body section";
+$view->footer = "This is my fancy footer section";
+echo $view->render();
+
+
+
+
+
+
+
+
+//
 $number = [
     1234235345345345,
     3545435454354543,
@@ -21,7 +41,9 @@ $payload = [
     'status' => '42',
     'message' => 'hello world',
     'serial' => $serial,
-    'pool' => $number
+    'pool' => $number,
+    'check' => 'https://p5js.org/examples/math-map.html',
+    'sine' => 'https://bl.ocks.org/gkhays/c58a109172d543ee095e57f0eb3606f2'
 ];
 
 header('Content-Type: text/html; charset=utf-8');
