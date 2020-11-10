@@ -6,19 +6,25 @@ declare(strict_types = 1);
 
 
 
-
-// use View;
-    
+use elevenone\Components\View\Factory;
 
 
-$view = new View();
-$view->header = "This is my fancy header section";
-$view->body = "This is my fancy body section";
-$view->footer = "This is my fancy footer section";
-echo $view->render();
+$config = [
+    'path_views' => __DIR__ . '/template/views',
+];
 
 
+$factory = new Factory($config);
+$renderer = $factory->makeRenderer();
 
+$renderer->setLayout('layout');
+$renderer->setView('_partial');
+
+$view = $renderer->render(
+    '_partial', ['mock' => 'Hallo Layout!']);
+
+
+// echo($view);
 
 
 
