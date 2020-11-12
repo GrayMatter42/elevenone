@@ -29,10 +29,11 @@ $payload = [
     'serial' => $serial,
     'pool' => $number,
     'check' => 'https://p5js.org/examples/math-map.html',
-    'sine' => 'https://bl.ocks.org/gkhays/c58a109172d543ee095e57f0eb3606f2'
+    'sine' => 'https://bl.ocks.org/gkhays/c58a109172d543ee095e57f0eb3606f2',
+    'view' => 'viewfiles'
 ];
 
-header('Content-Type: text/html; charset=utf-8');
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -83,6 +84,8 @@ $view->setLayout('layout');
 
 // result
 $response = $view->__invoke(); // or just $view()
+
+header('Content-Type: text/html; charset=utf-8');
 echo $response;
 
 
